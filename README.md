@@ -17,9 +17,9 @@
   </picture>
 </p>
 
-# Understanding Failures in LLM Reasoning by Learning Structured Representations of Chain-of-Thought
+# Understanding Failures in LLM Reasoning<br>by Learning Structured Representations<br>of Chain-of-Thought
 
-**EMNLP 2026**
+**EMNLP Conference 2026 (Findings)**
 
 **Tommaso Felice Banfi**\*, **Mubashara Akhtar**\*, **Jingwei Ni**, **Mrinmaya Sachan**
 

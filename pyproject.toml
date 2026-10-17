@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "cot2graph"
 version = "1.0.0"
-description = "Understanding Failures in LLM Reasoning by Learning Structured Representations of Chain-of-Thought (EMNLP 2026)"
+description = "Understanding Failures in LLM Reasoning by Learning Structured Representations of Chain-of-Thought (Findings of EMNLP 2026)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
