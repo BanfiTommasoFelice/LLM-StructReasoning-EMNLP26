@@ -1,0 +1,20 @@
+# Core (graph building, GNNs, analysis)
+torch>=2.1
+torch-geometric>=2.4
+numpy
+pandas
+scipy
+scikit-learn
+statsmodels
+matplotlib
+pyyaml
+tqdm
+
+# LLM stages (generation, edge annotation, judge, reward models)
+vllm
+transformers
+datasets
+openai
+
+# Optional (draw)
+graphviz

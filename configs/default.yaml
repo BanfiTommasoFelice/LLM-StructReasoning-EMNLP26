@@ -1,0 +1,150 @@
+# CoT2Graph configuration.
+#
+# Every hyperparameter used in the paper lives here (see Appendix A).
+# Override any key from the command line with dotted paths, e.g.
+#   python -m cot2graph generate dataset=MMLU-Pro generation.num_runs=5
+
+dataset: GPQA                        # GPQA | MMLU-Pro
+model: DeepSeek-R1-Distill-Qwen-7B   # key of `models`
+output_dir: outputs                  # results go to <output_dir>/<dataset>/<model>/
+seed: 42
+
+# Reasoning LLMs whose traces are analysed.
+models:
+  DeepSeek-R1-Distill-Qwen-7B: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
+  DeepSeek-R1-Distill-Qwen-14B: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+  MiMo-7B-RL: XiaomiMiMo/MiMo-7B-RL
+
+datasets:
+  GPQA:
+    hf_id: Idavidrein/gpqa           # gated: accept the terms on the Hub first
+    hf_config: gpqa_extended
+    split: train
+    num_questions: null              # null = all questions
+  MMLU-Pro:
+    hf_id: TIGER-Lab/MMLU-Pro
+    hf_config: null
+    split: test
+    num_questions: 600               # balanced across the 14 categories
+
+# CoT generation (vLLM).
+generation:
+  prompt: prompts/generation.txt
+  num_runs: 1                        # traces per question; Best-of-N uses 5
+  temperature: 0.1
+  max_new_tokens: 16384              # 2^14
+  batch_size: 16
+  logprobs_top_k: 5                  # top-K log-probs kept for uncertainty metrics
+  dtype: bfloat16
+  tensor_parallel_size: 1
+  gpu_memory_utilization: 0.9
+
+# Rule-based step segmentation.
+segmentation:
+  min_chars: 100                     # shorter fragments are merged into the next step
+  markers: ["Alternatively", "Hmm", "Let me verify", "let’s verify", "To verify",
+            "Wait", "Verify", "Let’s confirm", "Let’s check", "Another example",
+            "But let’s", "wait", "No:", "no:", "Now", "Thus", "So", "Consequently",
+            "It follows", "Finally", "Step", "Final Answer", "However"]
+
+# Pairwise edge annotation (vLLM).
+edges:
+  model: meta-llama/Llama-3.1-8B-Instruct
+  prompt: prompts/edge_classification.txt
+  temperature: 0.2
+  max_new_tokens: 24
+  batch_size: 512
+  max_model_len: 32000
+  dtype: bfloat16
+  tensor_parallel_size: 1
+  gpu_memory_utilization: 0.9
+  dedup_edit_distance: 5             # near-identical steps share one node before annotation
+  # Minimum strength kept per edge type (strength is in [0, 10]).
+  min_strength:
+    inference: 8
+    background info: 8
+    observation: 0
+    meta-reflection: 0
+    repetition: 0
+  # Tie-break when merged edges have equal strength (first = kept).
+  tie_break: [inference, meta-reflection, observation, background info]
+
+# Step- and trace-level labels (OpenAI API, needs OPENAI_API_KEY). Prompts: Appendix I.
+judge:
+  model: gpt-5-mini
+  max_output_tokens: 60000
+  num_threads: 64
+  max_attempts: 3                    # re-ask when a per-step answer is incomplete
+  # trace_summary + node_assignment are only needed for the LCoT2Tree baseline.
+  tasks: [final_answer, hallucinated, relevance, trace_summary, node_assignment]
+
+# Node and edge features shared by all GNNs.
+features:
+  node: [position, position_norm, in_degree, out_degree, deg_balance, deg_ratio]
+  edge_types: [inference, background info, observation, meta-reflection, repetition, continuous]
+  edge_type_onehot: true             # false = untyped-edge ablation
+
+# Graph-level correctness prediction (GATv2).
+gnn:
+  graph: matrix_compressed           # tree_compressed = LCoT2Tree baseline
+  runs: [0]
+  seed: 11
+  hidden_dim: 64
+  num_layers: 2
+  heads: 1
+  dropout: 0.2
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  batch_size: 32
+  epochs: 200
+  lr_step: 20
+  lr_gamma: 0.5
+  patience: 50
+  eval_every: 15
+  num_splits: 11
+  test_size: 100                     # 445 train+val / 100 test on the 545 GPQA graphs
+  val_ratio: 0.15
+  balance_gamma: 2.0                 # soft down-sampling of the majority class
+  balance_tolerance: 15
+  class_weight_alpha: 0.1            # balanced class weights raised to this power
+  explain: true
+  explainer_epochs: 200
+
+# Node-level relevance / hallucination prediction (GINE).
+node_gnn:
+  graph: matrix_compressed
+  seed: 11
+  hidden_dim: 128
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  eta_min: 1.0e-5
+  batch_size: 32
+  epochs: 300
+  num_splits: 11
+  train_size: 400
+  test_size: 145
+  node_permute_prob: 0.1
+
+# Best-of-N selection.
+bestofn:
+  num_runs: 5
+  seed: 42
+  train_ratio: 0.7                   # question-level split
+  val_ratio: 0.2                     # of the training questions
+  orm: Skywork/Skywork-Reward-Llama-3.1-8B-v0.2
+  prm: peiyi9979/math-shepherd-mistral-7b-prm
+  max_length: 2048
+  fusions:
+    - [gnn, entropy]
+    - [orm, entropy]
+
+# Efficiency decomposition (L_CoT, L_loops, L_TSP*).
+efficiency:
+  prerequisite_types: [inference, meta-reflection, observation, background info]
+  relaxation_order: [background info, observation, meta-reflection, inference]
+  length_bins: [short, medium, long]
+
+# GNNExplainer analysis.
+explainer_analysis:
+  graph: matrix_compressed
+  regression_features: [position, position_norm, in_degree, out_degree, deg_balance]

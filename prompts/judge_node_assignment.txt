@@ -1,0 +1,21 @@
+TASK:
+Assign each reasoning step to one of the high-level key reasoning steps.
+
+KEY REASONING STEPS:
+{summary}
+
+INPUT:
+Problem:
+{problem}
+
+Reasoning Steps (0 to {last_step}):
+{cot}
+
+INSTRUCTIONS:
+- For each step, assign exactly ONE letter (A, B, C, ...).
+- Do NOT skip any step.
+- All steps from 0 to {last_step} must be assigned.
+- Provide brief justification.
+
+OUTPUT FORMAT (STRICT):
+[step i] <LETTER> | WHY: <brief justification (5 words)>

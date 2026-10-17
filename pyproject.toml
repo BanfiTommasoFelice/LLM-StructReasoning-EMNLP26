@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cot2graph"
+version = "1.0.0"
+description = "Understanding Failures in LLM Reasoning by Learning Structured Representations of Chain-of-Thought (EMNLP 2026)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+    "torch>=2.1",
+    "torch-geometric>=2.4",
+    "numpy",
+    "pandas",
+    "scipy",
+    "scikit-learn",
+    "statsmodels",
+    "matplotlib",
+    "pyyaml",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+llm = ["vllm", "transformers", "datasets", "openai"]
+draw = ["graphviz"]
+
+[project.scripts]
+cot2graph = "cot2graph.cli:main"
+
+[tool.setuptools]
+packages = ["cot2graph"]

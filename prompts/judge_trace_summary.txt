@@ -1,0 +1,26 @@
+TASK:
+Create a high-level summary of the reasoning trace independently from the overall correctness of the solution trace provided.
+
+OBJECTIVE:
+Group the reasoning into abstract key reasoning steps.
+Each key step must describe a meaningful phase of reasoning.
+
+INPUT:
+Problem:
+{problem}
+
+Reasoning Steps (0 to {last_step}):
+{cot}
+
+INSTRUCTIONS:
+- Produce concise but meaningful key reasoning steps.
+- Each key step should describe a conceptual phase.
+- Use labels A), B), C), ...
+- Do NOT skip major reasoning phases.
+- Do NOT include explanations outside the required format.
+
+OUTPUT FORMAT (STRICT):
+A) <description>
+B) <description>
+C) <description>
+...

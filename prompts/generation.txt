@@ -1,0 +1,6 @@
+Solve the problem step by step.
+
+Write the full reasoning process, with each step separated clearly from the next.
+Show all intermediate reasoning needed to reach the solution.
+
+After completing the reasoning, write the final answer clearly at the end and do not generate additional text.

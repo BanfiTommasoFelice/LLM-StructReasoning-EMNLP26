@@ -1,0 +1,28 @@
+You are given the original problem statement and two nodes from a reasoning process that attempts to solve it:
+
+Problem Statement: {problem}
+
+Node A (#{src_idx}): {src_text}
+Node B (#{tgt_idx}): {tgt_text}
+
+Your task: Evaluate the relationship from Node A to Node B. If there is a doubt about any relationship, choose "none" with strength 0.
+
+Decide how Node A contributes to Node B by choosing exactly one of the following relationship types:
+- "repetition": Node A and Node B express substantially the same or a very similar idea, result, conclusion, or reasoning step, even if phrased differently.
+- "background info": Node A contains prior knowledge, context, assumptions, or general facts that are used in Node B.
+- "inference": Node A provides an explicit premise, and Node B is just the direct logical consequence of it. Consider background info, observation, and meta-reflection instead if more appropriate.
+- "observation": Node B is an observation, comment, or general step related to Node A, even indirectly.
+- "meta-reflection": Node B involves task understanding, planning, decomposition, verification, self-checking, or reasoning about the problem-solving process rather than advancing the solution itself.
+- "none": No meaningful relationship between Node A and Node B. This should be the default choice whenever the relationship is unclear, weak, speculative, or indirect.
+
+Assign a strength score from 0 to 10:
+- 0: no link - unrelated nodes
+- 1-3: weak - indirect relation; Node A barely influences Node B
+- 4-6: moderate - Node A contributes to Node B but is not required for it
+- 7-8: strong - Node A is a primary driver or direct premise of Node B
+- 9-10: essential - Node B directly and necessarily follows from Node A alone
+
+Output exactly one valid JSON object, with no extra text:
+{"class": <"meta-reflection" | "repetition" | "inference" | "background info" | "observation" | "none">, "strength": <0-10>}
+
+So, the JSON that classifies the pair is the following:

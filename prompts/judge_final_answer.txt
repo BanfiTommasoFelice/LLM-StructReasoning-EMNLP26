@@ -1,0 +1,15 @@
+TASK: Determine if the trace reaches the correct answer.
+
+LABELS:
+- final_answer_correct: <Correct, Incorrect>
+- final_answer_in_cot: step numbers containing the final answer
+
+INPUT:
+Problem: {problem}
+Expected Solution: {solution}
+Expected Final Answer: {answer}
+Reasoning Steps: {cot}
+
+OUTPUT FORMAT (STRICT):
+Final answer correct: <Correct, Incorrect>
+Final answer in CoT: [comma-separated step numbers]

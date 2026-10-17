@@ -1,0 +1,17 @@
+TASK: Assess each step's contribution to the derivation of the final answer.
+
+LABELS:
+- relevant: contributes new information
+- redundant: repeats prior information
+- irrelevant: unrelated to solution
+
+INPUT:
+Problem: {problem}
+Expected Solution: {solution}
+Expected Final Answer: {answer}
+Reasoning Steps: {cot}
+
+INSTRUCTIONS: Analyze all steps 0 to {last_step} in order.
+
+OUTPUT (ONE LINE PER NODE):
+[i] <relevant|redundant|irrelevant> | WHY: <3 words>

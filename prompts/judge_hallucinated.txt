@@ -1,0 +1,17 @@
+TASK: Check each numbered step for factual accuracy, independently of other steps.
+
+LABELS:
+- correct: node fully accurate
+- partial: node partially accurate, minor errors or incomplete
+- hallucinated: factually wrong or unsupported
+
+INPUT:
+Problem: {problem}
+Expected Solution: {solution}
+Expected Final Answer: {answer}
+Reasoning Steps: {cot}
+
+INSTRUCTIONS: Evaluate all steps 0 to {last_step} independently.
+
+OUTPUT (ONE LINE PER NODE):
+[i] <correct|partial|hallucinated> | WHY: <3 words>
