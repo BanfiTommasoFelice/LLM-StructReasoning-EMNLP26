@@ -27,7 +27,9 @@
 
 <sub>\* Equal contribution</sub>
 
-[Paper (OpenReview)](https://openreview.net/forum?id=wFTJZ8fvns)
+[![Paper](https://img.shields.io/badge/Paper-PDF-B31B1B?style=flat-square)](assets/paper-EMNLP2026.pdf)
+[![Poster](https://img.shields.io/badge/Poster-PDF-215CAF?style=flat-square)](assets/poster-EMNLP2026.pdf)
+[![OpenReview](https://img.shields.io/badge/OpenReview-wFTJZ8fvns-8C1B13?style=flat-square)](https://openreview.net/forum?id=wFTJZ8fvns)
 
 </div>
 
